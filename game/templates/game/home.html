@@ -1,0 +1,88 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Guess the Path</title>
+    <link rel="stylesheet" href="{% static 'game/style.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="game-container">
+        <h1>Guess the Path</h1>
+        
+        <div id="gameGrid" class="grid" style="grid-template-columns: repeat({{ grid_size }}, 40px);"></div>
+        
+        <div id="timer">Path will hide in <span id="countdown">10</span> seconds</div>
+        
+        <div class="reset-container">
+            <button onclick="resetGame()" class="reset-button">Reset Game</button>
+        </div>
+    </div>
+
+    <script>
+        const gridSize = {{ grid_size }};
+        const path = {{ path|safe }};
+        const gameGrid = document.getElementById("gameGrid");
+        const timer = document.getElementById("timer");
+        const countdown = document.getElementById("countdown");
+
+        let clickedPath = [];
+        let firstClick = true;
+
+        // Build grid
+        for (let i = 0; i < gridSize * gridSize; i++) {
+            const cell = document.createElement("div");
+            cell.className = "cell";
+            cell.setAttribute("data-index", i);
+            if (path.includes(i)) {
+                cell.classList.add("path-show");
+            }
+
+            cell.addEventListener("click", () => {
+                if (firstClick) {
+                    const row = Math.floor(i / gridSize);
+                    if (row > Math.floor(gridSize / 2)) {
+                        alert("Please start from the top row.");
+                        window.location.href = "/";
+                        return;
+                    }
+                    firstClick = false;
+                }
+
+                if (clickedPath.includes(i)) return;
+                clickedPath.push(i);
+
+                if (!path.includes(i)) {
+                    window.location.href = "/";
+                } else {
+                    cell.classList.add("clicked");
+                    if (clickedPath.length === path.length) {
+                        alert("You guessed the path correctly!");
+                    }
+                }
+            });
+
+            gameGrid.appendChild(cell);
+        }
+
+        // Countdown logic
+        let timeLeft = 10;
+        const timerInterval = setInterval(() => {
+            timeLeft--;
+            countdown.textContent = timeLeft;
+
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                document.querySelectorAll('.path-show').forEach(cell => {
+                    cell.classList.remove("path-show");
+                });
+                timer.style.display = "none";
+            }
+        }, 1000);
+
+        function resetGame() {
+            window.location.href = "/";
+        }
+    </script>
+</body>
+</html>
