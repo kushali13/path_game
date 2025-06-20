@@ -3,7 +3,7 @@
 <html>
 <head>
     <title>Guess the Path</title>
-    <link rel="stylesheet" href="{% static 'game/style.css' %}">
+    <link rel="stylesheet" href="{% static 'game/style.css' %}">        #Load the CSS
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -12,7 +12,7 @@
         
         <div id="gameGrid" class="grid" style="grid-template-columns: repeat({{ grid_size }}, 40px);"></div>
         
-        <div id="timer">Path will hide in <span id="countdown">10</span> seconds</div>
+        <div id="timer">Path will hide in <span id="countdown">10</span> seconds</div>    #Timer for Hiding Pattern
         
         <div class="reset-container">
             <button onclick="resetGame()" class="reset-button">Reset Game</button>
